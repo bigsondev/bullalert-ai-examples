@@ -1,5 +1,7 @@
 # Disclaimer
 
+> Full disclaimer: https://bullalert.ai/disclaimer
+
 **BullAlert is an informational data / intelligence tool. It is not financial advice, not
 investment advice, not a recommendation, and not a brokerage or trading service.**
 

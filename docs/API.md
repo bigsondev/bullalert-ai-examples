@@ -8,6 +8,7 @@ Get a key from the dashboard → Account → API: <https://bullalert.ai/dashboar
 > brokerage or advisor. The API publishes **derived IP** — a 0-100 score, a `momentum`/`watch`
 > status — plus **public-domain SEC EDGAR** facts. It does **not** return raw prices, percentages,
 > volume, or RVOL. You compute your own decisions. See [`DISCLAIMER.md`](./DISCLAIMER.md).
+> Full disclaimer: https://bullalert.ai/disclaimer
 
 Every endpoint returns a `{ "data": ..., "meta": ... }` envelope (the SEC endpoint nests its
 payload directly under `data`). Errors use `{ "error": { "code", "message" } }` — see

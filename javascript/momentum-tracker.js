@@ -5,7 +5,7 @@
  *
  *   1. SIGNALS   (/v1/signals)   — breadth: every validated $0.20-$20 candidate
  *   2. WATCHLIST (/v1/watchlist) — ranking: our proprietary 0-100 momentum score + status
- *   3. ALERTS    (/v1/alerts)    — conviction record: the names we actually flagged
+ *   3. ALERTS    (/v1/alerts)    — all-gates record: the names that cleared all 20 gates
  *
  * For each ticker on the momentum watchlist, it reports whether that name also
  * appears in the breadth feed and/or the published-alerts record — the
@@ -80,7 +80,7 @@ async function main() {
     );
   }
 
-  console.log('\nFunnel: breadth (signals) -> our ranking (watchlist) -> conviction record (alerts).');
+  console.log('\nFunnel: breadth (signals) -> our ranking (watchlist) -> all-gates record (alerts).');
   console.log('Not financial advice. BullAlert is a data/intelligence tool — your decisions are your own.');
 }
 

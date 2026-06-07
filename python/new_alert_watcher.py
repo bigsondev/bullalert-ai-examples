@@ -1,10 +1,10 @@
-"""New-alert watcher -- a simple conviction-feed notifier (Python).
+"""New-alert watcher -- a simple alerts-feed notifier (Python).
 
 Polls the published-alert record (GET /v1/alerts) on an interval and prints a
 line the moment a NEW ticker appears since the last poll -- the "did we flag a
 new name?" notifier. The first poll prints the current set as a baseline.
 
-Informational only. The alerts feed is BullAlert's published conviction record
+Informational only. The alerts feed is BullAlert's published alerts record
 (which names we flagged + when), NOT financial advice and NOT a recommendation
 to act. "Alert" means "we flagged it", not "buy it". Do your own research.
 
@@ -46,7 +46,7 @@ def main() -> int:
     load_dotenv()
     client = BullAlertClient()
 
-    print("BullAlert -- new-alert watcher (published conviction feed)")
+    print("BullAlert -- new-alert watcher (published alerts feed)")
     print('Informational only, NOT financial advice. "Alert" = we flagged it, not "buy it".')
     print(f"Polling /v1/alerts every {POLL_INTERVAL_SEC}s"
           + (f" for {MAX_POLLS} polls.\n" if MAX_POLLS else " (forever -- Ctrl-C to stop).\n"))

@@ -5,14 +5,15 @@
 [![API docs](https://img.shields.io/badge/API-docs-blue.svg)](https://bullalert.ai/api)
 
 Official **JavaScript + Python + MCP** examples for the **[BullAlert API](https://bullalert.ai/api)** —
-a real-time **small-cap / microcap momentum** intelligence and **SEC EDGAR filings** API. Build a
+an **instant small-cap / microcap momentum** intelligence and **SEC EDGAR filings** API. Build a
 **stock momentum scanner**, a **breadth-feed agent**, a **pump-and-dump risk screener**, or wire
 the hosted **MCP server into Claude or ChatGPT** in minutes.
 
 > **BullAlert is an informational data / intelligence tool — not financial advice.** The API returns
 > **derived IP** (a 0-100 momentum score, a `momentum`/`watch` status) and **public-domain SEC EDGAR**
 > facts. It does **not** return raw prices, percentages, or volume. You build your own strategy and
-> do your own research. See [`docs/DISCLAIMER.md`](./docs/DISCLAIMER.md).
+> do your own research. See [`docs/DISCLAIMER.md`](./docs/DISCLAIMER.md) and the full
+> [BullAlert disclaimer](https://bullalert.ai/disclaimer).
 
 **Keywords:** BullAlert API · small-cap momentum API · microcap stock signals API · momentum scanner ·
 stock screener API · SEC EDGAR filings API · pump and dump detector · MCP server for Claude & ChatGPT ·
@@ -31,31 +32,32 @@ compute your own decisions.
 
 ## Signals vs Watchlist vs Alerts — one funnel, three widths
 
-These three surfaces are the **same pipeline at three levels of conviction**. Same universe,
-progressively narrower. Think **breadth → ranking → conviction**:
+These three surfaces are the **same pipeline at three levels of strictness**. Same universe,
+progressively narrower. Think **breadth → ranking → fully-gated**:
 
-| | **`/v1/signals`** — breadth | **`/v1/watchlist`** — ranking | **`/v1/alerts`** — conviction |
+| | **`/v1/signals`** — breadth | **`/v1/watchlist`** — ranking | **`/v1/alerts`** — fully-gated |
 |---|---|---|---|
-| **What it is** | The full validated candidate pool — every $0.20–$20 microcap our scanner cleared the universe + junk/scam filters on this session. | The **top-N of that pool, ranked** by our proprietary 0-100 momentum score, each tagged `momentum` or `watch`. | The handful that passed the **full promotion pipeline** (all 20 gates + strategy checks). The published record of what we actually flagged. |
-| **Think of it as** | The raw data layer / "what's in play". | "What to watch **right now**", ranked. | "What we're **most confident** in", with a timestamp. |
+| **What it is** | The full validated candidate pool — every $0.20–$20 microcap our scanner cleared the universe + junk/scam filters on this session. | The **top-N of that pool, ranked** by our proprietary 0-100 momentum score, each tagged `momentum` or `watch`. | The handful that **cleared all 20 admission gates + strategy checks** — the published record of what the algorithm flagged, and when. |
+| **Think of it as** | The raw data layer / "what's in play". | "What's showing the **strongest momentum right now**", ranked. | "The names that **passed every gate** today" — strictest momentum bar, with a catch time. |
 | **Volume** | **Hundreds** per session — grows from a few at the open to hundreds by close. | Exactly up to your `limit` (**10 / 25 / 50 / 100**). | **A few per day** (hard cap 3 pre-market / 5 regular / 3 after-hours). |
 | **Fields** | `ticker`, `caught_at`, `session` (identity only — no score). | `rank`, `ticker`, `score` (0–100), `status` (`momentum`/`watch`). | `ticker`, `caught_at` (identity + time). |
 | **Sort** | Freshest catch first (`caught_at` ↓) — **stacks/accumulates** through the session; paginate with `offset`. | Highest score first (`momentum` rows always above `watch`). | Newest first. |
-| **Use it for** | Backtests, breadth agents, "scan everything we validated". | A ranked momentum board / dashboard. | A clean conviction feed / "did we flag X today?". |
+| **Use it for** | Backtests, breadth agents, "scan everything we validated". | A ranked momentum board / dashboard. | A clean record of fully-gated names / "did the algorithm flag X today?". |
 
 **The funnel:** every alert was on the watchlist; every watchlist row was a signal first. Signals
 is the widest net (hundreds), the watchlist is the ranked shortlist (top-N), and alerts is the
-narrow, highest-conviction set (a few a day). The [momentum-tracker](#examples-included) example
-walks a ticker through all three.
+narrow set that **cleared all 20 gates** (a few a day). None of these is advice or a buy/sell
+call — they're observations you act on yourself. The [momentum-tracker](#examples-included)
+example walks a ticker through all three.
 
 ## Endpoints
 
 | Endpoint | What you get |
 |---|---|
 | `GET /v1/health` | Liveness + version (no auth). |
+| `GET /v1/signals` | Validated candidate breadth feed: `ticker`, `caught_at`, `session`. |
 | `GET /v1/watchlist` | Ranked momentum board: `rank`, `ticker`, `score` (0–100), `status` (`momentum`/`watch`). |
 | `GET /v1/alerts` | Published-alert record: `ticker`, `caught_at`. |
-| `GET /v1/signals` | Validated candidate breadth feed: `ticker`, `caught_at`, `session`. |
 | `GET /v1/edgar/:ticker` | SEC-EDGAR company intelligence: financial snapshot, dilution, runway, insider, 8-K flags. |
 | `POST /v1/mcp` | MCP (Model Context Protocol) server — 4 tools for Claude / ChatGPT / Cursor. |
 
@@ -94,7 +96,7 @@ node signals-feed.js          # validated breadth feed
 node momentum-tracker.js      # signal -> watchlist rank -> alert funnel
 node pump-and-dump-screener.js  # momentum board + SEC dilution risk context
 node catalyst-momentum.js     # freshest signals cross-referenced with SEC filings
-node new-alert-watcher.js     # poll the conviction feed for new names
+node new-alert-watcher.js     # poll the published alerts feed for new names
 ```
 
 ```js
@@ -145,11 +147,11 @@ More: [`mcp/README.md`](./mcp/README.md).
 
 | Example | JS | Python | What it shows |
 |---|---|---|---|
-| **Signals breadth feed** | `signals-feed.js` | `signals_feed.py` | Paginate the full validated candidate pool, grouped by session. |
-| **Momentum tracker** | `momentum-tracker.js` | `momentum_tracker.py` | The signal → watchlist-rank → alert funnel ("momentum trader style"). |
-| **Pump-and-dump risk screener** | `pump-and-dump-screener.js` | `pump_and_dump_screener.py` | Cross-reference the momentum board with SEC dilution facts as **risk context** (not advice). |
-| **Catalyst scan (signals × edgar)** | `catalyst-momentum.js` | `catalyst_momentum.py` | Cross-reference the **freshest validated signals** with SEC filings — which fresh movers have a **material 8-K / recent filing** behind them (catalyst context, not advice). |
-| **New-alert watcher** | `new-alert-watcher.js` | `new_alert_watcher.py` | Poll the published conviction feed and print **new names** as they're flagged. |
+| **Signals breadth feed** | [`signals-feed.js`](./javascript/signals-feed.js) | [`signals_feed.py`](./python/signals_feed.py) | Paginate the full validated candidate pool, grouped by session. |
+| **Momentum tracker** | [`momentum-tracker.js`](./javascript/momentum-tracker.js) | [`momentum_tracker.py`](./python/momentum_tracker.py) | The signal → watchlist-rank → alert funnel ("momentum trader style"). |
+| **Pump-and-dump risk screener** | [`pump-and-dump-screener.js`](./javascript/pump-and-dump-screener.js) | [`pump_and_dump_screener.py`](./python/pump_and_dump_screener.py) | Cross-reference the momentum board with SEC dilution facts as **risk context** (not advice). |
+| **Catalyst scan (signals × edgar)** | [`catalyst-momentum.js`](./javascript/catalyst-momentum.js) | [`catalyst_momentum.py`](./python/catalyst_momentum.py) | Cross-reference the **freshest validated signals** with SEC filings — which fresh movers have a **material 8-K / recent filing** behind them (catalyst context, not advice). |
+| **New-alert watcher** | [`new-alert-watcher.js`](./javascript/new-alert-watcher.js) | [`new_alert_watcher.py`](./python/new_alert_watcher.py) | Poll the published alerts feed and print **new names** as they're flagged. |
 
 ## Rate limits
 
@@ -170,6 +172,6 @@ claude, chatgpt, trading-tools, market-data, javascript, python
 ## License
 
 [MIT](./LICENSE) — © 2026 BullAlert. Examples are provided as-is, for informational purposes only.
-**Not financial advice.** See [`docs/DISCLAIMER.md`](./docs/DISCLAIMER.md).
+**Not financial advice.** See [`docs/DISCLAIMER.md`](./docs/DISCLAIMER.md) · [bullalert.ai/disclaimer](https://bullalert.ai/disclaimer).
 
-Links: [BullAlert API docs](https://bullalert.ai/api) · [Dashboard](https://bullalert.ai/dashboard) · [Blog](https://bullalert.ai/blog)
+Links: [BullAlert API docs](https://bullalert.ai/api) · [Dashboard](https://bullalert.ai/dashboard) · [Disclaimer](https://bullalert.ai/disclaimer) · [Blog](https://bullalert.ai/blog)

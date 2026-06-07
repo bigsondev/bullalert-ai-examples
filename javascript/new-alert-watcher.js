@@ -1,11 +1,11 @@
 /**
- * New-alert watcher — a simple conviction-feed notifier (JavaScript).
+ * New-alert watcher — a simple alerts-feed notifier (JavaScript).
  *
  * Polls the published-alert record (GET /v1/alerts) on an interval and prints a
  * line the moment a NEW ticker appears since the last poll — the "did we flag a
  * new name?" notifier. The first poll prints the current set as a baseline.
  *
- *   Informational only. The alerts feed is BullAlert's published conviction
+ *   Informational only. The alerts feed is BullAlert's published alerts
  *   record (which names we flagged + when), NOT financial advice and NOT a
  *   recommendation to act. "Alert" means "we flagged it", not "buy it". Do your
  *   own research.
@@ -46,7 +46,7 @@ async function fetchAlerts(client) {
 async function main() {
   const client = new BullAlertClient();
 
-  console.log('BullAlert — new-alert watcher (published conviction feed)');
+  console.log('BullAlert — new-alert watcher (published alerts feed)');
   console.log('Informational only, NOT financial advice. "Alert" = we flagged it, not "buy it".');
   console.log(`Polling /v1/alerts every ${POLL_INTERVAL_SEC}s` +
     (MAX_POLLS ? ` for ${MAX_POLLS} polls.\n` : ' (forever — Ctrl-C to stop).\n'));
