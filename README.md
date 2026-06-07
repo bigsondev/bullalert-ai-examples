@@ -159,16 +159,6 @@ Per key: **lite 30 / default 60 / b2b 300** requests per minute, plus daily + mo
 `/v1/*` share one bucket; responses carry `X-RateLimit-*` headers; over-limit returns `429` with a
 `Retry-After`. The limiter fails open. Full details: [`docs/RATE_LIMITS.md`](./docs/RATE_LIMITS.md).
 
-## Suggested GitHub topics
-
-When you publish this repo, add topics for discoverability:
-
-```
-bullalert, stock-api, momentum, small-cap, microcap, stock-screener, stock-signals,
-sec-edgar, edgar-api, financial-data, fintech, algotrading, mcp, model-context-protocol,
-claude, chatgpt, trading-tools, market-data, javascript, python
-```
-
 ## License
 
 [MIT](./LICENSE) — © 2026 BullAlert. Examples are provided as-is, for informational purposes only.
