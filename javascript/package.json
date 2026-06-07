@@ -1,0 +1,25 @@
+{
+  "name": "bullalert-examples-js",
+  "version": "1.0.0",
+  "private": true,
+  "description": "JavaScript examples for the BullAlert small-cap momentum + SEC EDGAR API. Informational data tool, not financial advice.",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "screener": "node pump-and-dump-screener.js",
+    "signals": "node signals-feed.js",
+    "momentum": "node momentum-tracker.js"
+  },
+  "keywords": [
+    "bullalert",
+    "stock-api",
+    "momentum",
+    "small-cap",
+    "microcap",
+    "sec-edgar",
+    "fintech"
+  ],
+  "license": "MIT"
+}

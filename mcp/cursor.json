@@ -1,0 +1,11 @@
+{
+  "_comment": "Cursor MCP config for the BullAlert API. Put this in .cursor/mcp.json in your project (or ~/.cursor/mcp.json globally), replace YOUR_BULLALERT_API_KEY with a key from https://bullalert.ai/dashboard (Account -> API), then reload Cursor and enable the 'bullalert' server in Settings -> MCP. Exposes 4 tools: list_watchlist, list_signals, list_alerts, get_company_financials. Informational data tool, not financial advice.",
+  "mcpServers": {
+    "bullalert": {
+      "url": "https://api.bullalert.ai/v1/mcp",
+      "headers": {
+        "x-ba-api-key": "YOUR_BULLALERT_API_KEY"
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "_comment": "Claude Desktop MCP config for the BullAlert API. Merge the mcpServers block into your existing claude_desktop_config.json (macOS: ~/Library/Application Support/Claude/claude_desktop_config.json | Windows: %APPDATA%\\Claude\\claude_desktop_config.json), replace YOUR_BULLALERT_API_KEY with a key from https://bullalert.ai/dashboard (Account -> API), then fully restart Claude Desktop. Exposes 4 tools: list_watchlist, list_signals, list_alerts, get_company_financials. Informational data tool, not financial advice.",
+  "mcpServers": {
+    "bullalert": {
+      "type": "http",
+      "url": "https://api.bullalert.ai/v1/mcp",
+      "headers": {
+        "x-ba-api-key": "YOUR_BULLALERT_API_KEY"
+      }
+    }
+  }
+}
